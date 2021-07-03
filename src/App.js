@@ -2,20 +2,21 @@ import React, {useState, useContext, useMemo} from 'react';
 
 const appContext = React.createContext(null)
 
-export const App = () => {
-    const [appState, setAppState] = useState({
+const store = {
+    state: {
         user: {name: 'frank', age: 18}
-    })
+    },
+    setState(newState){
+        store.state = newState
+    }
+}
 
-    const x = useMemo(()=>{return <幺儿子/>},[])// 空数组表示，只执行一次
-
-    const contextValue = {appState, setAppState}
-
+export const App = () => {
     return (
-        <appContext.Provider value={contextValue}>
+        <appContext.Provider value={store}>
             <大儿子/>
             <二儿子/>
-            {x}
+            <幺儿子/>
         </appContext.Provider>
     );
 }
@@ -35,8 +36,8 @@ const 幺儿子 = () => {
 
 const User = () => {
     console.log('User执行了' + Math.random())
-    const contextValue = useContext(appContext);
-    return <div>User:{contextValue.appState.user.name}</div>
+    const {state} = useContext(appContext);
+    return <div>User:{state.user.name}</div>
 }
 
 const reducer = (state, {type, payload}) => {
@@ -55,12 +56,12 @@ const reducer = (state, {type, payload}) => {
 
 const connect = (Component) => {
     return (props) => {
-        const {appState, setAppState} = useContext(appContext);
+        const {state, setState} = useContext(appContext);
         const dispatch = (action) => {
-            setAppState(reducer(appState, action));
+            setState(reducer(state, action));
         }
 
-        return <Component {...props} dispatch={dispatch} state={appState}/>
+        return <Component {...props} dispatch={dispatch} state={state}/>
     }
 }
 
