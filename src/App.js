@@ -19,10 +19,12 @@ const 二儿子 = () => {
     console.log('二儿子执行了' + Math.random())
     return <section>二儿子<UserModifier x={'x'}>内容</UserModifier></section>
 }
-const 幺儿子 = () => {
+const 幺儿子 = connect(state => {
+    return {group: state.group}
+})(({group}) => {
     console.log('幺儿子执行了' + Math.random())
-    return <section>幺儿子</section>
-}
+    return <section>幺儿子<div>Group:{group.name}</div></section>
+})
 
 const User = connect(state => {
     return {user: state.user}

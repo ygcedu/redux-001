@@ -2,7 +2,8 @@ import React, {useState, useContext, useEffect} from 'react';
 
 export const store = {
     state: {
-        user: {name: 'frank', age: 18}
+        user: {name: 'frank', age: 18},
+        group: {name: '前端组'}
     },
     setState(newState) {
         store.state = newState
@@ -32,6 +33,17 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
+// 比较新旧数据有没有变化
+const changed = (oldState, newState) => {
+    let changed = false;
+    for (let key in oldState) {
+        if (oldState[key] !== newState[key]) {
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 export const connect = (selector) => (Component) => {
     return (props) => {
         const {state, setState} = useContext(appContext);
@@ -41,10 +53,15 @@ export const connect = (selector) => (Component) => {
         const data = selector ? selector(state) : {state};
         useEffect(() => {
             store.subscribe(() => {
-                // 传一个新的对象{}, 是什么无所谓，这里只要地址变了就行
-                update({})
+                const newData = selector ? selector(store.state) : {state: store.state};
+                if (changed(data, newData)) {
+                    console.log('update')
+                    // 传一个新的对象{}, 是什么无所谓，这里只要地址变了就行
+                    update({});
+                }
             })
-        }, [])// 只订阅一次
+            // 注意这里最好 取消订阅，否则在selector变化时会出现重复订阅
+        }, [selector])
         const dispatch = (action) => {
             setState(reducer(state, action));
         }
