@@ -1,23 +1,41 @@
-import './App.css';
+import React, {useState, useContext} from 'react';
 
-function App() {
+const appContext = React.createContext(null)
+
+export const App = () => {
+    const [appState, setAppState] = useState({
+        user: {name: 'frank', age: 18}
+    })
+
+    const contextValue = {appState, setAppState}
+
     return (
-        <div className="App">
-            <header className="App-header">
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <appContext.Provider value={contextValue}>
+            <大儿子/>
+            <二儿子/>
+            <幺儿子/>
+        </appContext.Provider>
     );
 }
 
-export default App;
+const 大儿子 = () => <section>大儿子<User /></section>
+const 二儿子 = () => <section>二儿子<UserModifier /></section>
+const 幺儿子 = () => <section>幺儿子</section>
+
+const User = () => {
+    const contextValue = useContext(appContext);
+    return <div>User:{contextValue.appState.user.name}</div>
+}
+
+const UserModifier = () => {
+    const contextValue = useContext(appContext);
+    const onChange = (e) => {
+        contextValue.appState.user.name = e.target.value;
+        contextValue.setAppState(contextValue.appState);
+    }
+    return (
+        <div>
+            <input value={contextValue.appState.user.name} onChange={onChange}/>
+        </div>
+    )
+}
