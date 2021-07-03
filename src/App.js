@@ -41,8 +41,8 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
-const createWrapper = (Component) => {
-    const Wrapper = () => {
+const connect = (Component) => {
+    return () => {
         const {appState, setAppState} = useContext(appContext);
         const dispatch = (action) => {
             setAppState(reducer(appState, action));
@@ -50,10 +50,9 @@ const createWrapper = (Component) => {
 
         return <Component dispatch={dispatch} state={appState}/>
     }
-    return Wrapper;
 }
 
-const UserModifier = createWrapper(({dispatch, state}) => {
+const UserModifier = connect(({dispatch, state}) => {
     const onChange = (e) => {
         dispatch({type: 'updateUser', payload: {name: e.target.value}});
     }
