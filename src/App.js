@@ -1,5 +1,6 @@
 import React from 'react';
 import {appContext, connect, store} from "./redux";
+import {connectToUser} from "./connecters/connectToUser";
 
 export const App = () => {
     return (
@@ -27,18 +28,6 @@ const 幺儿子 = connect(state => {
         <div>Group:{group.name}</div>
     </section>
 })
-
-const userSelector = state => {
-    return {user: state.user}
-}
-
-const userDispatcher = (dispatch) => {
-    return {
-        updateUser: (attrs) => dispatch({type: 'updateUser', payload: attrs})
-    }
-}
-
-const connectToUser = connect(userSelector, userDispatcher)
 
 const User = connectToUser(({user}) => {
     console.log('User执行了' + Math.random())
