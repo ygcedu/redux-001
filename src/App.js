@@ -28,18 +28,22 @@ const 幺儿子 = connect(state => {
     </section>
 })
 
-const User = connect(state => {
+const userSelector = state => {
     return {user: state.user}
-})(({user}) => {
+}
+
+const userDispatcher = (dispatch) => {
+    return {
+        updateUser: (attrs) => dispatch({type: 'updateUser', payload: attrs})
+    }
+}
+
+const User = connect(userSelector)(({user}) => {
     console.log('User执行了' + Math.random())
     return <div>User:{user.name}</div>
 })
 
-const UserModifier = connect(null, (dispatch) => {
-    return {
-        updateUser: (attrs) => dispatch({type: 'updateUser', payload: attrs})
-    }
-})(({updateUser, state, children}) => {
+const UserModifier = connect(userSelector, userDispatcher)(({updateUser, state, children}) => {
     const onChange = (e) => {
         updateUser({name: e.target.value});
     }
