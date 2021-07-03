@@ -64,11 +64,15 @@ const ajax = () => {
     })
 }
 
+const fetchUserPromise = () => {
+    return ajax('/user').then(response => response.data);
+}
+
 const UserModifier = connect(null, null)(({state, dispatch}) => {
     const onClick = (e) => {
         dispatch({
             type: 'updateUser',
-            payload: ajax('/user').then(response => response.data)
+            payload: fetchUserPromise()
         })
     }
     return (
