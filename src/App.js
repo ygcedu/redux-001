@@ -28,10 +28,10 @@ const User = () => {
 }
 
 const UserModifier = () => {
-    const contextValue = useContext(appContext);
+    const {appState, setAppState} = useContext(appContext);
     const onChange = (e) => {
-        contextValue.appState.user.name = e.target.value;
-        contextValue.setAppState({...contextValue.appState});
+        appState.user.name = e.target.value;
+        setAppState({...appState});
     }
     return (
         <div>
