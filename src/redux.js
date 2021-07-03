@@ -44,13 +44,17 @@ const changed = (oldState, newState) => {
     return changed;
 }
 
-export const connect = (selector) => (Component) => {
+export const connect = (selector, dispatcherSelector) => (Component) => {
     return (props) => {
+        const dispatch = (action) => {
+            setState(reducer(state, action));
+        }
         const {state, setState} = useContext(appContext);
         // 这里只需要写数据，用于通知React更新UI
         const [, update] = useState({})
         // 如果selector参数赋值了，则执行selector函数，如果没有则还用全局的state
         const data = selector ? selector(state) : {state};
+        const dispatchers = dispatcherSelector ? dispatcherSelector(dispatch) : {dispatch}
         useEffect(() => store.subscribe(() => {
             const newData = selector ? selector(store.state) : {state: store.state};
             if (changed(data, newData)) {
@@ -59,11 +63,8 @@ export const connect = (selector) => (Component) => {
                 update({});
             }
         }), [selector])
-        const dispatch = (action) => {
-            setState(reducer(state, action));
-        }
 
-        return <Component {...props} {...data} dispatch={dispatch}/>
+        return <Component {...props} {...data} {...dispatchers}/>
     }
 }
 
