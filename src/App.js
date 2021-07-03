@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useMemo} from 'react';
 
 const appContext = React.createContext(null)
 
@@ -7,22 +7,34 @@ export const App = () => {
         user: {name: 'frank', age: 18}
     })
 
+    const x = useMemo(()=>{return <幺儿子/>},[])// 空数组表示，只执行一次
+
     const contextValue = {appState, setAppState}
 
     return (
         <appContext.Provider value={contextValue}>
             <大儿子/>
             <二儿子/>
-            <幺儿子/>
+            {x}
         </appContext.Provider>
     );
 }
 
-const 大儿子 = () => <section>大儿子<User/></section>
-const 二儿子 = () => <section>二儿子<UserModifier x={'x'}>内容</UserModifier></section>
-const 幺儿子 = () => <section>幺儿子</section>
+const 大儿子 = () => {
+    console.log('大儿子执行了' + Math.random())
+    return <section>大儿子<User/></section>
+}
+const 二儿子 = () => {
+    console.log('二儿子执行了' + Math.random())
+    return <section>二儿子<UserModifier x={'x'}>内容</UserModifier></section>
+}
+const 幺儿子 = () => {
+    console.log('幺儿子执行了' + Math.random())
+    return <section>幺儿子</section>
+}
 
 const User = () => {
+    console.log('User执行了' + Math.random())
     const contextValue = useContext(appContext);
     return <div>User:{contextValue.appState.user.name}</div>
 }
