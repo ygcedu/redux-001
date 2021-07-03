@@ -31,7 +31,7 @@ const UserModifier = () => {
     const contextValue = useContext(appContext);
     const onChange = (e) => {
         contextValue.appState.user.name = e.target.value;
-        contextValue.setAppState(contextValue.appState);
+        contextValue.setAppState({...contextValue.appState});
     }
     return (
         <div>
