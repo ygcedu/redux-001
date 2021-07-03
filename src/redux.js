@@ -1,10 +1,8 @@
 import React, {useState, useContext, useEffect} from 'react';
 
-export const store = {
-    state: {
-        user: {name: 'frank', age: 18},
-        group: {name: '前端组'}
-    },
+const store = {
+    state: undefined,
+    reducer: undefined,
     setState(newState) {
         store.state = newState
         store.listeners.map(fn => fn(store.state))
@@ -19,18 +17,10 @@ export const store = {
     }
 }
 
-const reducer = (state, {type, payload}) => {
-    if (type === 'updateUser') {
-        return {
-            ...state,
-            user: {
-                ...state.user,
-                ...payload
-            }
-        }
-    } else {
-        return state
-    }
+export const createStore = (reducer, initState) => {
+    store.state = initState
+    store.reducer = reducer
+    return store;
 }
 
 // 比较新旧数据有没有变化
@@ -47,7 +37,7 @@ const changed = (oldState, newState) => {
 export const connect = (selector, dispatcherSelector) => (Component) => {
     return (props) => {
         const dispatch = (action) => {
-            setState(reducer(state, action));
+            setState(store.reducer(state, action));
         }
         const {state, setState} = useContext(appContext);
         // 这里只需要写数据，用于通知React更新UI

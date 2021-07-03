@@ -1,6 +1,28 @@
 import React from 'react';
-import {appContext, connect, store} from "./redux";
+import {appContext, connect, createStore} from "./redux";
 import {connectToUser} from "./connecters/connectToUser";
+
+// 如果state为空，使用默认值：initState
+const reducer = (state, {type, payload}) => {
+    if (type === 'updateUser') {
+        return {
+            ...state,
+            user: {
+                ...state.user,
+                ...payload
+            }
+        }
+    } else {
+        return state
+    }
+}
+
+const initState = {
+    user: {name: 'frank', age: 18},
+    group: {name: '前端组'}
+}
+
+const store = createStore(reducer, initState)
 
 export const App = () => {
     return (
