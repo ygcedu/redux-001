@@ -41,13 +41,16 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
-const Wrapper = () => {
-    const {appState, setAppState} = useContext(appContext);
-    const dispatch = (action) => {
-        setAppState(reducer(appState, action));
-    }
+const createWrapper = (Component) => {
+    const Wrapper = () => {
+        const {appState, setAppState} = useContext(appContext);
+        const dispatch = (action) => {
+            setAppState(reducer(appState, action));
+        }
 
-    return <UserModifier dispatch={dispatch} state={appState}/>
+        return <Component dispatch={dispatch} state={appState}/>
+    }
+    return Wrapper;
 }
 
 const UserModifier = ({dispatch, state}) => {
@@ -60,3 +63,6 @@ const UserModifier = ({dispatch, state}) => {
         </div>
     )
 }
+
+// 必须先声明了 UserModifier 组件，再把组件作为参数传给 createWrapper 函数
+const Wrapper = createWrapper(UserModifier);
