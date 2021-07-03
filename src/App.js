@@ -1,5 +1,5 @@
 import React from 'react';
-import {appContext, connect, createStore} from "./redux";
+import {connect, createStore, Provider} from "./redux";
 import {connectToUser} from "./connecters/connectToUser";
 
 // 如果state为空，使用默认值：initState
@@ -26,11 +26,11 @@ const store = createStore(reducer, initState)
 
 export const App = () => {
     return (
-        <appContext.Provider value={store}>
+        <Provider store={store}>
             <大儿子/>
             <二儿子/>
             <幺儿子/>
-        </appContext.Provider>
+        </Provider>
     );
 }
 

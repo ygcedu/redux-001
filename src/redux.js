@@ -59,3 +59,11 @@ export const connect = (selector, dispatcherSelector) => (Component) => {
 }
 
 export const appContext = React.createContext(null)
+
+export const Provider = ({store, children}) => {
+    return (
+        <appContext.Provider value={store}>
+            {children}
+        </appContext.Provider>
+    )
+}
