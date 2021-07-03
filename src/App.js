@@ -56,15 +56,29 @@ const User = connectToUser(({user}) => {
     return <div>User:{user.name}</div>
 })
 
-const UserModifier = connectToUser(({updateUser, user, children}) => {
-    const onChange = (e) => {
-        updateUser({name: e.target.value});
+const ajax = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve({data: {name: '3秒后'}})
+        }, 3000)
+    })
+}
+
+const fetchUser = (dispatch) => {
+    ajax('/user').then(response => {
+        dispatch({type: 'updateUser', payload: response.data})
+    })
+}
+
+const UserModifier = connect(null, null)(({state, dispatch}) => {
+    const onClick = (e) => {
+        fetchUser(dispatch);
+        // dispatch(fetchUser);// fetchUser is an action
     }
     return (
         <div>
-            {/*children 通过中间组件的 props 透传给实际的组件*/}
-            {children}
-            <input value={user.name} onChange={onChange}/>
+            <div>User: {state.user.name}</div>
+            <button onClick={onClick}>异步获取user</button>
         </div>
     )
 });
