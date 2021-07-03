@@ -72,8 +72,7 @@ const fetchUser = (dispatch) => {
 
 const UserModifier = connect(null, null)(({state, dispatch}) => {
     const onClick = (e) => {
-        fetchUser(dispatch);
-        // dispatch(fetchUser);// fetchUser is an action
+        dispatch(fetchUser);
     }
     return (
         <div>

@@ -28,7 +28,18 @@ const store = {
     }
 }
 
-const dispatch = store.dispatch
+let dispatch = store.dispatch
+
+const prevDispatch = dispatch;
+
+// dispatch同时支持处理函数和非函数
+dispatch = (action) => {
+    if (action instanceof Function) {
+        action(dispatch);
+    } else {
+        prevDispatch(action) // 对象 type payload
+    }
+}
 
 export const createStore = (_reducer, initState) => {
     state = initState
