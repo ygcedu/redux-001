@@ -38,12 +38,14 @@ const userDispatcher = (dispatch) => {
     }
 }
 
-const User = connect(userSelector)(({user}) => {
+const connectToUser = connect(userSelector, userDispatcher)
+
+const User = connectToUser(({user}) => {
     console.log('User执行了' + Math.random())
     return <div>User:{user.name}</div>
 })
 
-const UserModifier = connect(userSelector, userDispatcher)(({updateUser, state, children}) => {
+const UserModifier = connectToUser(({updateUser, user, children}) => {
     const onChange = (e) => {
         updateUser({name: e.target.value});
     }
@@ -51,7 +53,7 @@ const UserModifier = connect(userSelector, userDispatcher)(({updateUser, state, 
         <div>
             {/*children 通过中间组件的 props 透传给实际的组件*/}
             {children}
-            <input value={state.user.name} onChange={onChange}/>
+            <input value={user.name} onChange={onChange}/>
         </div>
     )
 });
