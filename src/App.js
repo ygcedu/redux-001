@@ -27,13 +27,13 @@ const User = () => {
     return <div>User:{contextValue.appState.user.name}</div>
 }
 
-const createNewState = (state, actionType, actionData) => {
-    if (actionType === 'updateUser') {
+const reducer = (state, {type, payload}) => {
+    if (type === 'updateUser') {
         return {
             ...state,
             user: {
                 ...state.user,
-                ...actionData
+                ...payload
             }
         }
     } else {
@@ -44,11 +44,11 @@ const createNewState = (state, actionType, actionData) => {
 const UserModifier = () => {
     const {appState, setAppState} = useContext(appContext);
     const onChange = (e) => {
-        setAppState(createNewState(appState, 'updateUser', {name: e.target.value}));
+        setAppState(reducer(appState, {type:'updateUser', payload:{name: e.target.value}}));
     }
     return (
         <div>
-            <input value={contextValue.appState.user.name} onChange={onChange}/>
+            <input value={appState.user.name} onChange={onChange}/>
         </div>
     )
 }
