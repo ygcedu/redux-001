@@ -68,8 +68,16 @@ const fetchUserPromise = () => {
     return ajax('/user').then(response => response.data);
 }
 
+const fetchUser = (dispatch) => {
+    return ajax('/user').then(response => dispatch({type: 'updateUser', payload: response.data}));
+}
+
 const UserModifier = connect(null, null)(({state, dispatch}) => {
     const onClick = (e) => {
+        // 方式 1
+        // dispatch(fetchUser);
+
+        // 方式 2
         dispatch({
             type: 'updateUser',
             payload: fetchUserPromise()
