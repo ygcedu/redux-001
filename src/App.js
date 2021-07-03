@@ -19,7 +19,7 @@ export const App = () => {
 }
 
 const 大儿子 = () => <section>大儿子<User/></section>
-const 二儿子 = () => <section>二儿子<UserModifier/></section>
+const 二儿子 = () => <section>二儿子<UserModifier x={'x'}>内容</UserModifier></section>
 const 幺儿子 = () => <section>幺儿子</section>
 
 const User = () => {
@@ -42,22 +42,24 @@ const reducer = (state, {type, payload}) => {
 }
 
 const connect = (Component) => {
-    return () => {
+    return (props) => {
         const {appState, setAppState} = useContext(appContext);
         const dispatch = (action) => {
             setAppState(reducer(appState, action));
         }
 
-        return <Component dispatch={dispatch} state={appState}/>
+        return <Component {...props} dispatch={dispatch} state={appState}/>
     }
 }
 
-const UserModifier = connect(({dispatch, state}) => {
+const UserModifier = connect(({dispatch, state, children}) => {
     const onChange = (e) => {
         dispatch({type: 'updateUser', payload: {name: e.target.value}});
     }
     return (
         <div>
+            {/*children 通过中间组件的 props 透传给实际的组件*/}
+            {children}
             <input value={state.user.name} onChange={onChange}/>
         </div>
     )
