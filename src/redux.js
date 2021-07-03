@@ -32,11 +32,13 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
-export const connect = (Component) => {
+export const connect = (selector) => (Component) => {
     return (props) => {
         const {state, setState} = useContext(appContext);
         // 这里只需要写数据，用于通知React更新UI
         const [, update] = useState({})
+        // 如果selector参数赋值了，则执行selector函数，如果没有则还用全局的state
+        const data = selector ? selector(state) : {state};
         useEffect(() => {
             store.subscribe(() => {
                 // 传一个新的对象{}, 是什么无所谓，这里只要地址变了就行
@@ -47,7 +49,7 @@ export const connect = (Component) => {
             setState(reducer(state, action));
         }
 
-        return <Component {...props} dispatch={dispatch} state={state}/>
+        return <Component {...props} {...data} dispatch={dispatch}/>
     }
 }
 
