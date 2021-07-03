@@ -41,6 +41,20 @@ dispatch = (action) => {
     }
 }
 
+const prevDispatch2 = dispatch
+
+// dispatch同时支持处理函数和非函数，payload为Promise类型的异步action
+dispatch = (action) => {
+    if (action.payload instanceof Promise) {
+        action.payload.then(data => {
+            // 递归处理 payload 是 Promise 类型的 action
+            dispatch({...action, payload: data})
+        })
+    } else {
+        prevDispatch2(action) // 对象 type payload
+    }
+}
+
 export const createStore = (_reducer, initState) => {
     state = initState
     reducer = _reducer
